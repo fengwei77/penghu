@@ -39,12 +39,12 @@
 <div id="floating-panel">
     <b>景點: </b>
     <select id="select_spot"> 
-        <option value="23.57014,119.59885">test 1</option>
-        <option value="23.567499,119.56225">test 2</option>
+        <option value="25.031815,121.463833">test 1</option>
+        <option value="25.031815,121.463833">test 2</option>
     </select>
 </div>
 <script src="jquery-2.2.4.min.js"></script> 
-		 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZLFzE0cVd_zC5V1pJnQBJhXokCBo5Th0&callback=initMap&sensor=true"
+		 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZLFzE0cVd_zC5V1pJnQBJhXokCBo5Th0&callback=initMap"
     async defer></script>
 <script>
     var map;
@@ -128,8 +128,15 @@
         setCurrentLocation(position.coords.latitude, position.coords.longitude);
     };
     function error(res) {
-        alert("取得經緯失敗" + res);
+       // alert("取得經緯失敗" + res);
         console.log(res);
+		$.getJSON("http://ipinfo.io", function(doc){
+			var latlong = doc.loc.split(",") 
+		 setCurrentLocation(parseFloat(latlong[0]), parseFloat(latlong[1]));
+
+		  }, function(err) {
+			 
+		  });
     };
     var first_gps = 1;
     var currentMarker; // global variable to store previous marker
