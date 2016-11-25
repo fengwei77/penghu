@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+    <meta charset="utf-8">
+    <title>Simple markers</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+        }
+        #coords { background-color: rgba(70, 177, 255, 0.6); padding: 15px; font-size: 14px;  font-weight: bolder;}
+        #floating-panel {
+            position: absolute;
+            top: 10px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div id="coords"></div>
+<div id="floating-panel">
+    <b>景點: </b>
+    <select id="select_spot"> 
+        <option value="23.57014,119.59885">test 1</option>
+        <option value="23.567499,119.56225">test 2</option>
+    </select>
+</div>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASwNTXHhuKFKrwKiLeTOnLFHKWgwOuFOg&signed_in=true&callback=initMap&sensor=true"></script>
+<script>
+    var map;
+
+    var infowindow;
+    var directionsService;
+    var directionsService_player;
+    var directionsDisplay;
+    var directionsDisplay_player;
+
+    var watch_id ;
+    function initMap() {
+          directionsDisplay = new google.maps.DirectionsRenderer({
+            suppressMarkers: true,
+            polylineOptions: {
+                strokeColor: "#EE00FF",
+                strokeOpacity: 0.5,
+                strokeWeight: 8
+            }
+        });
+          directionsDisplay_player = new google.maps.DirectionsRenderer({
+            suppressMarkers: true,
+            polylineOptions: {
+                strokeColor: "#007BFF",
+                strokeOpacity: 0.6,
+                strokeWeight: 6
+            }
+        });
+
+        directionsService = new google.maps.DirectionsService;
+        directionsService_player = new google.maps.DirectionsService;
+        infowindow = new google.maps.InfoWindow();
+         map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: {lat: 23.567499, lng: 119.562192}
+        });
+
+
+//        var coordsDiv = document.getElementById('coords');
+//        map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(coordsDiv);
+//        map.addListener('mousemove', function(event) {
+//            coordsDiv.textContent =
+//                     '此路線總長度 : 100 公里'
+//        });
+//
+
+        directionsDisplay.setMap(map);
+        directionsDisplay_player.setMap(map);
+
+        calculateAndDisplayRoute(directionsService, directionsDisplay , 1);
+
+
+        var onChangeHandler = function() {
+            goto_spot();
+        };
+        document.getElementById('select_spot').addEventListener('change', onChangeHandler);
+
+//        navigator.geolocation.watchPosition(success, error, options);
+//        document.getElementById('mode').addEventListener('change', function() {
+//            calculateAndDisplayRoute(directionsService, directionsDisplay);
+//        });
+    }
+
+    function goto_spot(){
+        navigator.geolocation.clearWatch(watch_id);
+//        calculateAndDisplayRoute(directionsService_player, directionsDisplay_player);
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 30000
+        };
+
+
+        watch_id = navigator.geolocation.watchPosition(success, error, options);
+
+ 
+    }
+
+
+    function success(position) {
+        setCurrentLocation(position.coords.latitude, position.coords.longitude);
+    };
+    function error(res) {
+        alert("取得經緯失敗" + res);
+        console.log(res);
+    };
+    var first_gps = 1;
+    var currentMarker; // global variable to store previous marker
+    function setCurrentLocation(lat, lon) {
+        currentPosition = new google.maps.LatLng(lat, lon); //設目前位置的座標
+        if(first_gps == 1){
+            map.setCenter(currentPosition); //以自已位置為地圖中心
+            first_gps = 0;
+        }
+
+
+    
+		targetMarker_pos_val = $('#select_spot :selected').val(); 
+        targetMarker_pos = targetMarker_pos_val.split(",") ;
+        if(targetMarker_pos.length != 0){ 
+          targetPosition = new google.maps.LatLng(targetMarker_pos[0], targetMarker_pos[1]); //設目前位置的座標
+		  }
+		  
+		   targetMarker = new google.maps.Marker({
+            position: targetPosition,
+            map: map,
+            title: '目標'
+			});  //將目前位置的座標加入到地圖中
+        var request = {
+            origin: currentPosition,   //可輸入住址名稱或Google座標
+            destination :targetPosition,
+            travelMode: google.maps.TravelMode.WALKING
+        };
+
+        directionsService_player.route(request, function (response, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+                directionsDisplay_player.setDirections(response);
+                if (currentMarker)
+                    currentMarker.setMap(null);
+                    currentMarker = new google.maps.Marker({
+                    position: currentPosition,
+                    map: map,
+                    title: '你的位置',
+                    icon: "https://maps.google.com/mapfiles/kml/pal3/icon28.png",
+                });  //將目前位置的座標加入到地圖中
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+
+
+
+    }
+
+
+
+    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+            var checkboxArray = [
+                {lat: 23.57014, lng: 119.59885},
+                {lat: 23.567499, lng: 119.562192},
+                {lat: 23.56307, lng: 119.56225},
+                {lat: 23.56224, lng: 119.56021}
+
+            ];
+            createMarker({lat: 23.554688, lng: 119.599500}, "end", "終點內容", "http://www.google.com/mapfiles/markerB.png")
+            createMarker({lat: 23.605365, lng: 119.612495}, "start", "起點內容", "http://maps.gstatic.com/mapfiles/markers2/marker_greenA.png");
+            var waypts = [];
+            for (var i = 0; i < checkboxArray.length; i++) {
+                waypts.push({
+                    location: checkboxArray[i],
+                    stopover: true
+
+                });
+
+                createMarker( checkboxArray[i], "waypoint " + i, "中間內容" + i, "http://www.google.com/mapfiles/marker_yellow.png");
+
+            }
+
+            directionsService.route({
+                origin: {lat: 23.605365, lng: 119.612495},
+                destination:  {lat: 23.554688, lng: 119.599500},
+                waypoints: waypts,
+                optimizeWaypoints: true,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function(response, status) {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+//                var route = response.routes[0];
+//                var summaryPanel = document.getElementById('directions-panel');
+
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+
+
+
+
+    }
+
+    function createMarker(latlng, label, html, url) {
+        var contentString = '<b>' + label + '</b><br>' + html;
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            icon: url,
+            title: label
+//            zIndex: Math.round(latlng.lat() * -100000) << 5
+        });
+
+
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+        });
+    }
+
+
+</script>
+</body>
+</html>
