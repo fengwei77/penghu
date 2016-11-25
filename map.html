@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<head> 
 
-    <meta charset="utf-8">
+       <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="
+       default-src 'self' data: gap: https://ssl.gstatic.com https://csi.gstatic.com;
+       script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.gstatic.com https://*.googleapis.com  http://*.otter-star.com;
+       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com http://*.otter-star.com;
+       font-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com http://*.otter-star.com;
+       media-src * http://*.otter-star.com;
+       img-src 'self' 'unsafe-inline' https://*.gstatic.com https://*.googleapis.com http://*.otter-star.com;
+       connect-src *;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="請輸入網站簡介">
+    <meta name="copyright" content="請輸入公司名稱">
+    <meta name="author" content="請輸入網站作者">
+    <meta name="url" content="請輸入網址">
+    <link rel="shortcut icon" href="">
+
     <title>Simple markers</title>
     <style>
         html, body {
