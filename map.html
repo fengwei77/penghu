@@ -130,7 +130,7 @@
     function error(res) {
        // alert("取得經緯失敗" + res);
         console.log(res);
-		$.getJSON("http://ipinfo.io", function(doc){
+		$.getJSON("https://ipinfo.io", function(doc){
 			var latlong = doc.loc.split(",") 
 		 setCurrentLocation(parseFloat(latlong[0]), parseFloat(latlong[1]));
 
