@@ -142,14 +142,16 @@
     var first_gps = 1;
     var currentMarker; // global variable to store previous marker
     function setCurrentLocation(lat, lon) {
-        currentPosition = new google.maps.LatLng(lat, lon); //設目前位置的座標
+//        currentPosition = new google.maps.LatLng(lat, lon); //設目前位置的座標
+        currentPosition =new google.maps.LatLng(23.5611121,119.6734269);
+
         if(first_gps == 1){
             map.setCenter(currentPosition); //以自已位置為地圖中心
             first_gps = 0;
         }
 
 
-        currentPosition =new google.maps.LatLng(23.560746,119.674857);
+        currentPosition =new google.maps.LatLng(23.5611121,119.6734269);
     
 		targetMarker_pos_val = $('#select_spot :selected').val(); 
         targetMarker_pos = targetMarker_pos_val.split(",") ;
