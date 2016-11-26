@@ -110,17 +110,17 @@
     }
 
     function goto_spot(){
-        navigator.geolocation.clearWatch(watch_id);
-//        calculateAndDisplayRoute(directionsService_player, directionsDisplay_player);
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 30000
-        };
-
-
-        watch_id = navigator.geolocation.watchPosition(success, error, options);
-
+//        navigator.geolocation.clearWatch(watch_id);
+////        calculateAndDisplayRoute(directionsService_player, directionsDisplay_player);
+//        var options = {
+//            enableHighAccuracy: true,
+//            timeout: 5000,
+//            maximumAge: 30000
+//        };
+//
+//
+//        watch_id = navigator.geolocation.watchPosition(success, error, options);
+        setCurrentLocation(23.5611121,119.6734269);
  
     }
 
@@ -142,9 +142,7 @@
     var first_gps = 1;
     var currentMarker; // global variable to store previous marker
     function setCurrentLocation(lat, lon) {
-//        currentPosition = new google.maps.LatLng(lat, lon); //設目前位置的座標
-        currentPosition =new google.maps.LatLng(23.5611121,119.6734269);
-
+        currentPosition = new google.maps.LatLng(lat, lon); //設目前位置的座標
         if(first_gps == 1){
             map.setCenter(currentPosition); //以自已位置為地圖中心
             first_gps = 0;
