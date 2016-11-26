@@ -39,8 +39,8 @@
 <div id="floating-panel">
     <b>景點: </b>
     <select id="select_spot"> 
-        <option value="25.031815,121.463833">test 1</option>
-        <option value="25.031815,121.463833">test 2</option>
+        <option value="23.567499,119.562192">test 1</option>
+        <option value="23.56307,119.56225">test 2</option>
     </select>
 </div>
 <script src="jquery-2.2.4.min.js"></script> 
@@ -166,6 +166,7 @@
             travelMode: google.maps.TravelMode.WALKING
         };
 
+        currentPosition =new google.maps.LatLng(23.560746,119.674857);
         directionsService_player.route(request, function (response, status) {
             if (status === google.maps.DirectionsStatus.OK) {
                 directionsDisplay_player.setDirections(response);
