@@ -149,6 +149,7 @@
         }
 
 
+        currentPosition =new google.maps.LatLng(23.560746,119.674857);
     
 		targetMarker_pos_val = $('#select_spot :selected').val(); 
         targetMarker_pos = targetMarker_pos_val.split(",") ;
@@ -167,7 +168,6 @@
             travelMode: google.maps.TravelMode.WALKING
         };
 
-        currentPosition =new google.maps.LatLng(23.560746,119.674857);
         directionsService_player.route(request, function (response, status) {
             if (status === google.maps.DirectionsStatus.OK) {
                 directionsDisplay_player.setDirections(response);
