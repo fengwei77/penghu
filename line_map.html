@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drawing tools</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            position: absolute;
+            left: 0;
+            top:0px;
+            height: 100%;
+            width: 70%;
+        }
+        #info {
+            left:70%;
+            position: absolute;
+            top:0px;
+
+            height: 100%;
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div id="info">
+
+</div>
+<script>
+    var polygonArray = [];
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 23.571064, lng:  119.606139},
+            zoom:14
+        });
+
+
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: [
+                    google.maps.drawing.OverlayType.POLYLINE
+                ]
+            }
+
+        });
+        var pp = {
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.6,
+            strokeWeight: 5,
+            clickable: false,
+            editable: false,
+            zIndex: 1
+        };
+
+        drawingManager.set('polylineOptions', pp);
+
+
+
+        drawingManager.setMap(map);
+        google.maps.event.addListener(drawingManager, 'polylinecomplete', function (polyline) {
+
+//            console.log(polyline.getPath().getLength());
+//        document.getElementById('info').innerHTML += "polygon points:" + "<br>";
+            lt ='';
+        for (var i = 0; i < polyline.getPath().getLength(); i++) {
+//             console.log( '{lat: '+polyline.getPath().getAt(i).toUrlValue(6).split(',')[0]+', lng: '+ polyline.getPath().getAt(i).toUrlValue(6).split(',')[1] + '},');
+            lt = '{lat: '+polyline.getPath().getAt(i).toUrlValue(6).split(',')[0]+', lng: '+ polyline.getPath().getAt(i).toUrlValue(6).split(',')[1] + '},';
+            document.getElementById('info').innerHTML += lt + "<br>";
+
+        }
+ //        polygonArray.push(polygon);
+        });
+    }
+
+
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASwNTXHhuKFKrwKiLeTOnLFHKWgwOuFOg&signed_in=true&libraries=drawing&callback=initMap"
+        async defer></script>
+</body>
+</html>
